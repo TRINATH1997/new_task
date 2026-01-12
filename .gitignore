@@ -1,0 +1,25 @@
+
+# Node
+node_modules/
+*.log
+
+# SPFx build artifacts
+spfx-news/temp/
+spfx-news/dist/
+spfx-news/lib/
+spfx-news/sharepoint/solution/*.sppkg
+
+# .NET
+functions-app/bin/
+functions-app/obj/
+
+# Python cache (if used)
+__pycache__/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+.vs/

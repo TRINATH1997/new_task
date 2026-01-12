@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "fresh-news-webpart-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/freshNewsWebpart/FreshNewsWebpartWebPart.js",
+          "manifest": "./src/webparts/freshNewsWebpart/FreshNewsWebpartWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "FreshNewsWebpartWebPartStrings": "lib/webparts/freshNewsWebpart/loc/{locale}.js"
+  }
+}
