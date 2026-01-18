@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # [Advania UK]Product Developer(Fresh) — Screening Assessment
 
 This assessment evaluates your ability to deliver a modern intranet solution using **SPFx**, **SharePoint OOTB APIs**, **Azure Functions**, and **AI‑driven content moderation**, with optional **DevOps** and **Infrastructure‑as‑Code** enhancements.
@@ -69,3 +70,7 @@ Create an Azure Function App responsible for validating and moderating **SharePo
 *   We will **review** your architecture, reasoning, and trade‑offs in a follow‑up discussion.
 *   Aim for **clean, maintainable, secure, and production‑minded** code.
 *   **Preferred submission:** via a **branch** and **PR** to demonstrate your workflow.
+=======
+# new_task
+new_task
+>>>>>>> b4c104b055f36f7dd9b49ee43989350ab63c3288
