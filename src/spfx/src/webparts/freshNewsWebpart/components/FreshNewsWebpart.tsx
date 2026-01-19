@@ -1,43 +1,43 @@
-import * as React from 'react';
-import styles from './FreshNewsWebpart.module.scss';
-import type { IFreshNewsWebpartProps } from './IFreshNewsWebpartProps';
-import { escape } from '@microsoft/sp-lodash-subset';
+import * as React from "react";
+import type { IFreshNewsWebpartProps } from "./IFreshNewsWebpartProps";
+import { SearchBox } from "./SearchBox";
+import { FilterDropdown } from "./FilterDropdown";
+import { NewsList } from "./NewsList";
+import { Pagination } from "./Pagination";
+import { NewsService } from "../services/NewsService";
 
-export default class FreshNewsWebpart extends React.Component<IFreshNewsWebpartProps> {
-  public render(): React.ReactElement<IFreshNewsWebpartProps> {
-    const {
-      description,
-      isDarkTheme,
-      environmentMessage,
-      hasTeamsContext,
-      userDisplayName
-    } = this.props;
+const FreshNewsWebpart: React.FC<IFreshNewsWebpartProps> = (props) => {
 
-    return (
-      <section className={`${styles.freshNewsWebpart} ${hasTeamsContext ? styles.teams : ''}`}>
-        <div className={styles.welcome}>
-          <img alt="" src={isDarkTheme ? require('../assets/welcome-dark.png') : require('../assets/welcome-light.png')} className={styles.welcomeImage} />
-          <h2>Well done, {escape(userDisplayName)}!</h2>
-          <div>{environmentMessage}</div>
-          <div>Web part property value: <strong>{escape(description)}</strong></div>
-        </div>
-        <div>
-          <h3>Welcome to SharePoint Framework!</h3>
-          <p>
-            The SharePoint Framework (SPFx) is a extensibility model for Microsoft Viva, Microsoft Teams and SharePoint. It&#39;s the easiest way to extend Microsoft 365 with automatic Single Sign On, automatic hosting and industry standard tooling.
-          </p>
-          <h4>Learn more about SPFx development:</h4>
-          <ul className={styles.links}>
-            <li><a href="https://aka.ms/spfx" target="_blank" rel="noreferrer">SharePoint Framework Overview</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-graph" target="_blank" rel="noreferrer">Use Microsoft Graph in your solution</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-teams" target="_blank" rel="noreferrer">Build for Microsoft Teams using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-viva" target="_blank" rel="noreferrer">Build for Microsoft Viva Connections using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-store" target="_blank" rel="noreferrer">Publish SharePoint Framework applications to the marketplace</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-api" target="_blank" rel="noreferrer">SharePoint Framework API reference</a></li>
-            <li><a href="https://aka.ms/m365pnp" target="_blank" rel="noreferrer">Microsoft 365 Developer Community</a></li>
-          </ul>
-        </div>
-      </section>
-    );
-  }
-}
+  const service = React.useMemo(
+    () =>
+      new NewsService(
+        props.context.spHttpClient,
+        props.context.pageContext.web.absoluteUrl
+      ),
+    []
+  );
+
+  const [items, setItems] = React.useState<any[]>([]);
+  const [search, setSearch] = React.useState("");
+  const [author, setAuthor] = React.useState("All");
+  const [page, setPage] = React.useState(1);
+
+  React.useEffect(() => {
+    service
+      .getNews(search, page, props.pageSize, author)
+      .then(setItems);
+  }, [search, page, author, props.pageSize]);
+
+  return (
+    <>
+      {props.enableSearch && <SearchBox onChange={setSearch} />}
+      <FilterDropdown onChange={setAuthor} />
+      <NewsList items={items} />
+      <Pagination onNext={() => setPage(p => p + 1)} />
+    </>
+  );
+};
+
+export default FreshNewsWebpart;
+
+

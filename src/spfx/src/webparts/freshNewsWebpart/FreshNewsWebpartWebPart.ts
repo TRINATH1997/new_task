@@ -3,7 +3,8 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   type IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneToggle
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
@@ -14,7 +15,10 @@ import { IFreshNewsWebpartProps } from './components/IFreshNewsWebpartProps';
 
 export interface IFreshNewsWebpartWebPartProps {
   description: string;
+  pageSize: number;
+  enableSearch: boolean;
 }
+
 
 export default class FreshNewsWebpartWebPart extends BaseClientSideWebPart<IFreshNewsWebpartWebPartProps> {
 
@@ -22,16 +26,18 @@ export default class FreshNewsWebpartWebPart extends BaseClientSideWebPart<IFres
   private _environmentMessage: string = '';
 
   public render(): void {
-    const element: React.ReactElement<IFreshNewsWebpartProps> = React.createElement(
-      FreshNewsWebpart,
-      {
-        description: this.properties.description,
-        isDarkTheme: this._isDarkTheme,
-        environmentMessage: this._environmentMessage,
-        hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
-      }
-    );
+  const element = React.createElement(FreshNewsWebpart, {
+    description: this.properties.description,
+    isDarkTheme: this._isDarkTheme,
+    environmentMessage: this._environmentMessage,
+    hasTeamsContext: !!this.context.sdks.microsoftTeams,
+    userDisplayName: this.context.pageContext.user.displayName,
+    context: this.context,
+
+    pageSize: this.properties.pageSize,
+    enableSearch: this.properties.enableSearch
+  });
+
 
     ReactDom.render(element, this.domElement);
   }
@@ -108,10 +114,21 @@ export default class FreshNewsWebpartWebPart extends BaseClientSideWebPart<IFres
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
-                })
-              ]
+  PropertyPaneTextField('description', {
+    label: strings.DescriptionFieldLabel
+  }),
+
+  PropertyPaneTextField("pageSize", {
+    label: "Default page size"
+  }),
+
+  PropertyPaneToggle("enableSearch", {
+    label: "Enable Search",
+    onText: "On",
+    offText: "Off"
+  })
+]
+
             }
           ]
         }
